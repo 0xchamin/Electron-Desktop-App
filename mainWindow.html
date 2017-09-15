@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8" />
+      <mata name="viewport" content="device-width",
+      initial-scale="1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+      <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+      <title> Shopping List</title>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-wrapper">
+          <a class="brand-logo center">Shopping List</a>
+      </div>
+    </nav>
+      <ul>
+      </ul>
+
+      <script>
+      const electron = require('electron');
+      const {ipcRenderer} = electron;
+
+      const ul = document.querySelector('ul');
+      //catch using ipc render
+      //catch 'add' item
+      ipcRenderer.on('item:add', function(e, item){
+        ul.className = 'collection';
+        const li = document.createElement('li'); // blank list item
+        li.className = 'collectionItem'
+        const itemText = document.createTextNode(item);
+        //append item text to item
+        li.appendChild(itemText);
+        //add li to ul
+        ul.appendChild(li);
+      });
+
+      //catch 'clear' items
+      ipcRenderer.on('item:clear', function(){
+        //console.log('awwoo');
+        ul.innerHTML = '';
+        if(ul.children.length == 0){
+          ul.className = '';
+        }
+      });
+
+      // Remove items
+      ul.addEventListener('dblclick', removeItem);
+      function removeItem(e){
+        e.target.remove(); //any li we clicked will be removed
+        if(ul.children.length == 0){
+          ul.className = '';
+        }
+      }
+
+      </script>
+  </body>
+</html>
